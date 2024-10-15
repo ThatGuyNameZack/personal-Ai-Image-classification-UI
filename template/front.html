@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Classification</title>
+    <script src="script.js" defer></script> <!-- Link to your script.js -->
+</head>
+<body>
+    <h1>Image Classification</h1>
+    
+    <form id="classification-form">
+        <label for="brightness">Brightness (0-100):</label>
+        <input type="number" id="brightness" name="brightness" required min="0" max="100"><br>
+        
+        <label for="sharpness">Sharpness (0-100):</label>
+        <input type="number" id="sharpness" name="sharpness" required min="0" max="100"><br>
+        
+        <button type="submit">Classify</button>
+    </form>
+
+    <h2>Upload an Image</h2>
+    <input type="file" id="imageInput" accept="image/*">
+    <button onclick="uploadImage()">Upload Image</button>
+    
+    <p id="result"></p>
+    <p id="response"></p>
+
+    <script>
+        document.getElementById('classification-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const brightness = document.getElementById('brightness').value;
+            const sharpness = document.getElementById('sharpness').value;
+
+            fetch('/classify', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ brightness: parseInt(brightness), sharpness: parseInt(sharpness) })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerText = `Classification: ${data.classification}`;
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
